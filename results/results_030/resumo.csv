@@ -1,0 +1,8 @@
+metrica,valor
+modelo,yolo26n.pt
+threshold_confianca,0.3
+total_frames,427
+total_deteccoes,1364
+confianca_media,0.8059
+confianca_maxima,0.9136
+confianca_minima,0.3003
