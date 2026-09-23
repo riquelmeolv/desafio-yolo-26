@@ -38,8 +38,9 @@ def main():
     tp = fp = fn = 0
     rows_read = 0
 
+    # lê o CSV preenchido manualmente e soma TP, FP e FN
     with open(path, newline="", encoding="utf-8") as f:
-        reader = csv.DictReader(f)
+        reader = csv.DictReader(f) # realiza a leitura do CSV como dicionário, onde cada linha é um dict com os nomes das colunas como chaves
         for row in reader:
             if row["corretas"] == "" or row["nao_detectadas"] == "" or row["deteccoes_incorretas"] == "":
                 continue  # linha ainda não preenchida manualmente
@@ -53,6 +54,7 @@ def main():
         print("Preencha 'pessoas_reais', 'corretas', 'nao_detectadas' e 'deteccoes_incorretas' e rode de novo.")
         return
 
+    # calcula métricas 
     precision = tp / (tp + fp) if (tp + fp) > 0 else 0
     recall = tp / (tp + fn) if (tp + fn) > 0 else 0
     f1 = (2 * precision * recall / (precision + recall)) if (precision + recall) > 0 else 0

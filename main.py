@@ -1,6 +1,4 @@
 """
-main.py - Detecção de pessoas em vídeo usando YOLO26
-
 O QUE ESSE SCRIPT FAZ, EM 4 PASSOS:
   1. Abre o vídeo de entrada
   2. Passa cada frame (imagem) pelo modelo YOLO, que devolve as pessoas
@@ -8,36 +6,29 @@ O QUE ESSE SCRIPT FAZ, EM 4 PASSOS:
   3. Desenha as caixas na imagem e salva um vídeo novo com elas
   4. Ao final, salva um resumo em CSV (total de detecções, confiança
      média, etc.) e algumas imagens de amostra para avaliação manual
-
-Para rodar:
-    python main.py
-(usa os valores padrão definidos logo abaixo, em CONFIGURAÇÕES)
 """
-
+# bibliotecas de csv, tempo e caminhos do sistema.
 import csv
 import time
 from pathlib import Path
 
+# OpenCV e YOLO
 import cv2
 from ultralytics import YOLO
 
-# ============================================================
 # CONFIGURAÇÕES - altere aqui se quiser mudar vídeo, threshold, etc.
-# ============================================================
-VIDEO_ENTRADA = "input/video.mp4"
+VIDEO_ENTRADA = "input/video.mp4" 
 VIDEO_SAIDA = "output/video_detectado.mp4"
 PASTA_RESULTADOS = "results"
-MODELO = "yolo26n.pt"          # baixado automaticamente na 1ª execução
-THRESHOLD_CONFIANCA = 0.7      # só aceita detecções com confiança >= 50%
+MODELO = "yolo26n.pt"          # baixado automaticamente na 1ª execução da 'main'
+THRESHOLD_CONFIANCA = 0.7      # só aceita detecções com confiança >= 30/50/70%
 EXTRAIR_AMOSTRA_A_CADA = 15    # salva 1 frame a cada 15 para avaliação manual
 MAX_FRAMES_AMOSTRA = 20        # no máximo 20 frames de amostra
 
 PERSON_CLASS_ID = 0  # no dataset COCO, "pessoa" é sempre a classe número 0
 
 
-# ============================================================
 # PASSO 1: carregar o modelo YOLO e abrir o vídeo
-# ============================================================
 def carregar_modelo():
     print(f"Carregando modelo {MODELO}...")
     return YOLO(MODELO)
@@ -50,9 +41,7 @@ def abrir_video(caminho):
     return video
 
 
-# ============================================================
 # PASSO 2: detectar pessoas em UM frame e desenhar as caixas
-# ============================================================
 def detectar_e_desenhar(frame, modelo):
     """
     Recebe um frame (uma imagem) e o modelo YOLO.
@@ -69,7 +58,7 @@ def detectar_e_desenhar(frame, modelo):
     deteccoes = []  # vai guardar (id, confiança, x1, y1, x2, y2) de cada pessoa
     quantidade = 0
 
-    for caixa in resultado.boxes:
+    for caixa in resultado.boxes: # Revisar
         quantidade += 1
         confianca = float(caixa.conf[0])
         x1, y1, x2, y2 = map(int, caixa.xyxy[0])
@@ -90,21 +79,20 @@ def detectar_e_desenhar(frame, modelo):
     return frame, quantidade, deteccoes
 
 
-# ============================================================
 # PASSO 3: processar o vídeo inteiro, frame por frame
-# ============================================================
 def processar_video():
+    # referencia o modelo e o vídeo de entrada
     modelo = carregar_modelo()
     video = abrir_video(VIDEO_ENTRADA)
 
-    # cria as pastas de saída, se ainda não existirem
+    # cria as pastas de saída (output, result, sample_frames), se ainda não existirem
     Path(VIDEO_SAIDA).parent.mkdir(parents=True, exist_ok=True)
     Path(PASTA_RESULTADOS).mkdir(parents=True, exist_ok=True)
-    pasta_amostras = Path(PASTA_RESULTADOS) / "sample_frames"
-    pasta_amostras.mkdir(parents=True, exist_ok=True)
+    pasta_amostras = Path(PASTA_RESULTADOS) / "sample_frames" # Revisar
+    pasta_amostras.mkdir(parents=True, exist_ok=True) # Revisar
 
     # pega as informações do vídeo (tamanho, fps) para criar o vídeo de saída
-    fps = video.get(cv2.CAP_PROP_FPS) or 30
+    fps = video.get(cv2.CAP_PROP_FPS) or 30 # Revisar
     largura = int(video.get(cv2.CAP_PROP_FRAME_WIDTH))
     altura = int(video.get(cv2.CAP_PROP_FRAME_HEIGHT))
     gravador = cv2.VideoWriter(
@@ -126,7 +114,8 @@ def processar_video():
         sucesso, frame = video.read()
         if not sucesso:
             break  # acabou o vídeo
-
+        
+        # o modelo devolve o frame já com as caixas desenhadas, a quantidade de pessoas e a lista de detecções
         frame, qtd_pessoas, deteccoes = detectar_e_desenhar(frame, modelo)
 
         # salva cada detecção desse frame no CSV
@@ -160,9 +149,7 @@ def processar_video():
     salvar_template_avaliacao(linhas_amostra)
 
 
-# ============================================================
 # PASSO 4: salvar as estatísticas finais
-# ============================================================
 def salvar_resumo(total_frames, confiancas, tempo_gasto):
     total_deteccoes = len(confiancas)
     media = sum(confiancas) / total_deteccoes if total_deteccoes else 0

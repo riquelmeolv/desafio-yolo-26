@@ -30,7 +30,7 @@ desafio-yolo/
 Requer Python 3.9+.
 
 ```bash
-# criar e ativar ambiente virtual
+# criar e ativar ambiente virtual (evita conflito de versão)
 python -m venv venv
 venv\Scripts\activate        # Windows
 source venv/bin/activate     # macOS/Linux
@@ -50,7 +50,7 @@ Coloque seu vídeo em `input/video.mp4` e rode:
 python main.py
 ```
 
-Não precisa passar nenhum parâmetro — as configurações (vídeo de entrada,
+As configurações (vídeo de entrada,
 threshold, etc.) ficam no topo do arquivo `main.py`, num bloco chamado
 `CONFIGURAÇÕES`. Se quiser mudar o vídeo, o threshold de confiança ou
 qualquer outra coisa, é só abrir o `main.py` e editar os valores ali, sem
@@ -59,7 +59,7 @@ precisar mexer no resto do código.
 Isso gera o vídeo anotado em `output/`, o CSV de cada detecção em
 `results/deteccoes.csv` e o resumo geral em `results/resumo.csv`.
 
-### Avaliação manual de acurácia (seção 5 do desafio)
+### Avaliação manual de acurácia 
 
 Por padrão o script já extrai 1 frame a cada 15 (até 20 no total) para
 `results/sample_frames/` e cria `results/avaliacao_manual.csv` com uma
