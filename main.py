@@ -28,7 +28,7 @@ VIDEO_ENTRADA = "input/video.mp4"
 VIDEO_SAIDA = "output/video_detectado.mp4"
 PASTA_RESULTADOS = "results"
 MODELO = "yolo26n.pt"          # baixado automaticamente na 1ª execução
-THRESHOLD_CONFIANCA = 0.5      # só aceita detecções com confiança >= 50%
+THRESHOLD_CONFIANCA = 0.3      # só aceita detecções com confiança >= 50%
 EXTRAIR_AMOSTRA_A_CADA = 15    # salva 1 frame a cada 15 para avaliação manual
 MAX_FRAMES_AMOSTRA = 20        # no máximo 20 frames de amostra
 
