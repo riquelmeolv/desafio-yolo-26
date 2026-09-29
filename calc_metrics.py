@@ -15,12 +15,13 @@ Para rodar:
 import csv
 from pathlib import Path
 
+from main import THRESHOLD_CONFIANCA  # pega o threshold direto do main.py, sem repetir o valor aqui
+
 # ============================================================
 # CONFIGURAÇÕES
 # ============================================================
 ARQUIVO_AVALIACAO = "results/avaliacao_manual.csv"   # CSV preenchido à mão
 ARQUIVO_SAIDA = "results/metricas.csv"                # onde o resultado é salvo
-THRESHOLD_TESTADO = 0.7  # só para registro na tabela final — use o mesmo valor do main.py
 
 
 # ============================================================
@@ -70,7 +71,7 @@ def salvar_resultado(precision, recall, f1, tp, fp, fn):
         w = csv.writer(f)
         if arquivo_novo:
             w.writerow(["threshold", "tp", "fp", "fn", "precision", "recall", "f1"])
-        w.writerow([THRESHOLD_TESTADO, tp, fp, fn, round(precision, 4), round(recall, 4), round(f1, 4)])
+        w.writerow([THRESHOLD_CONFIANCA, tp, fp, fn, round(precision, 4), round(recall, 4), round(f1, 4)])
 
     print(f"Resultado salvo em: {caminho}")
 
@@ -85,6 +86,7 @@ def main():
 
     precision, recall, f1 = calcular_metricas(tp, fp, fn)
 
+    print(f"Threshold: {THRESHOLD_CONFIANCA}")
     print(f"Frames avaliados: {frames_avaliados}")
     print(f"TP={tp}  FP={fp}  FN={fn}")
     print(f"Precision: {precision * 100:.1f}%")
