@@ -16,10 +16,10 @@ desafio-yolo/
 ├── input/video.mp4
 ├── output/video_detectado.mp4
 └── results/
-    ├── deteccoes.csv        # detecções geradas pelo modelo
-    ├── resumo.csv           # resumo das detecções
-    ├── sample_frames/       # comparação com avaliação manual
-    ├── avaliacao_manual.csv # Precision, Recall e F1
+    ├── deteccoes.csv
+    ├── resumo.csv
+    ├── sample_frames/
+    ├── avaliacao_manual.csv
     └── metricas.csv
 ```
 
@@ -87,14 +87,6 @@ muito distantes da câmera.
 ---
 
 ## Perguntas do desafio
-
-**O que significa o confidence score do YOLO?**
-O confidence score do YOLO é a confiança que ele tem que a deteccção está correta.
-
-**Qual seria o impacto de utilizar um threshold de 0,30 em comparação com 0,70?**
-O verdadeiro impacto seria na métrica de Recall e no equilíbrio de F1-Score,
-pois com um threshold de 0,30 o modelo consegue detectar mais pessoas no frame,
-o que afeta a precisão de confiança do modelo e pode gerar mais Falsos Positivos(FP). 
 
 **O que é uma Bounding Box?**
 O retângulo (coordenadas `x1,y1,x2,y2`) que delimita onde o modelo

@@ -11,6 +11,7 @@ O QUE ESSE SCRIPT FAZ, EM 4 PASSOS:
 
 Para rodar:
     python main.py
+(usa os valores padrão definidos logo abaixo, em CONFIGURAÇÕES)
 """
 
 import csv
@@ -116,6 +117,7 @@ def processar_video():
     csv_writer.writerow(["frame", "pessoa_id", "confianca", "x1", "y1", "x2", "y2"])
 
     todas_confiancas = []   # guarda a confiança de TODAS as detecções do vídeo
+    pessoas_por_frame = []  # guarda quantas pessoas tinha em cada frame (para a média)
     linhas_amostra = []     # frames escolhidos para avaliação manual depois
 
     numero_frame = 0
@@ -134,6 +136,7 @@ def processar_video():
             todas_confiancas.append(confianca)
 
         gravador.write(frame)  # salva o frame (já com as caixas) no vídeo de saída
+        pessoas_por_frame.append(qtd_pessoas)
 
         # a cada N frames, guarda uma cópia para você avaliar manualmente depois
         if numero_frame % EXTRAIR_AMOSTRA_A_CADA == 0 and len(linhas_amostra) < MAX_FRAMES_AMOSTRA:
@@ -155,18 +158,20 @@ def processar_video():
     gravador.release()
     arquivo_csv.close()
 
-    salvar_resumo(numero_frame, todas_confiancas, time.time() - inicio)
+    salvar_resumo(numero_frame, todas_confiancas, pessoas_por_frame, time.time() - inicio)
     salvar_template_avaliacao(linhas_amostra)
 
 
 # ============================================================
 # PASSO 4: salvar as estatísticas finais
 # ============================================================
-def salvar_resumo(total_frames, confiancas, tempo_gasto):
+def salvar_resumo(total_frames, confiancas, pessoas_por_frame, tempo_gasto):
     total_deteccoes = len(confiancas)
     media = sum(confiancas) / total_deteccoes if total_deteccoes else 0
     maxima = max(confiancas) if confiancas else 0
     minima = min(confiancas) if confiancas else 0
+    media_pessoas = sum(pessoas_por_frame) / len(pessoas_por_frame) if pessoas_por_frame else 0
+    fps_processamento = total_frames / tempo_gasto if tempo_gasto > 0 else 0
 
     with open(Path(PASTA_RESULTADOS) / "resumo.csv", "w", newline="", encoding="utf-8") as f:
         w = csv.writer(f)
@@ -178,6 +183,9 @@ def salvar_resumo(total_frames, confiancas, tempo_gasto):
         w.writerow(["confianca_media", round(media, 4)])
         w.writerow(["confianca_maxima", round(maxima, 4)])
         w.writerow(["confianca_minima", round(minima, 4)])
+        w.writerow(["media_pessoas_por_frame", round(media_pessoas, 2)])
+        w.writerow(["fps_processamento", round(fps_processamento, 2)])
+        w.writerow(["tempo_total_segundos", round(tempo_gasto, 2)])
 
     print("\n=== Resumo ===")
     print(f"Frames processados: {total_frames}")
@@ -185,6 +193,8 @@ def salvar_resumo(total_frames, confiancas, tempo_gasto):
     print(f"Confiança média: {media * 100:.1f}%")
     print(f"Confiança máxima: {maxima * 100:.1f}%")
     print(f"Confiança mínima: {minima * 100:.1f}%")
+    print(f"Média de pessoas por frame: {media_pessoas:.2f}")
+    print(f"FPS de processamento: {fps_processamento:.1f}")
     print(f"Vídeo salvo em: {VIDEO_SAIDA}")
 
 

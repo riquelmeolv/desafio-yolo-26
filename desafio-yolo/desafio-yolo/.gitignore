@@ -1,0 +1,14 @@
+# Ambiente virtual
+venv/
+env/
+
+# Cache do Python
+__pycache__/
+*.pyc
+
+# Modelo YOLO baixado automaticamente (não precisa versionar)
+*.pt
+
+# Arquivos de sistema
+.DS_Store
+Thumbs.db
