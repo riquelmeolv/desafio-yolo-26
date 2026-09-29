@@ -16,10 +16,10 @@ desafio-yolo/
 ├── input/video.mp4
 ├── output/video_detectado.mp4
 └── results/
-    ├── deteccoes.csv
-    ├── resumo.csv
-    ├── sample_frames/
-    ├── avaliacao_manual.csv
+    ├── deteccoes.csv        # detecções geradas pelo modelo
+    ├── resumo.csv           # resumo das detecções
+    ├── sample_frames/       # comparação com avaliação manual
+    ├── avaliacao_manual.csv # Precision, Recall e F1
     └── metricas.csv
 ```
 
