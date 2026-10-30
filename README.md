@@ -57,9 +57,10 @@ execução.
    Calcula Precision/Recall/F1 e salva em `results/metricas.csv`.
 
 Para testar outro threshold: abra `main.py`, mude o valor de
-`THRESHOLD_CONFIANCA` no topo do arquivo, rode os passos 2-4 de novo. Vale
-o mesmo para `calc_metrics.py` — atualize `THRESHOLD_TESTADO` antes de
-rodar, pra ficar registrado certo na tabela final.
+`THRESHOLD_CONFIANCA` no topo do arquivo e rode os passos 2-4 de novo.
+O `calc_metrics.py` importa esse valor automaticamente de `main.py`;
+não é necessário alterá-lo nesse segundo arquivo. Mantenha o mesmo
+threshold entre a geração das detecções e o cálculo das métricas.
 
 ## Modelo utilizado
 
